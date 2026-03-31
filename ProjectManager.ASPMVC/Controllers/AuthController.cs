@@ -44,5 +44,27 @@ namespace ProjectManager.ASPMVC.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout(IFormCollection collection)
+        {
+            try
+            {
+                if (!ModelState.IsValid) throw new InvalidOperationException();
+                _userSession.UserId = null;
+                return RedirectToAction(nameof(Login));
+            }
+            catch (Exception)
+            {
+                return View();
+            }
+        }
     }
 }

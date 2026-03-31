@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.ASPMVC.Models.Project
 {
-    public class ListProject_VM
+    public class EditProject_Form
     {
         [ScaffoldColumn(false)]
         public Guid ProjectId { get; set; }
-        public string Name { get; set; }
+
+        [DisplayName("Nouvelle description : ")]
         public string Description { get; set; }
-        public int MembersCount { get; set; }
     }
 }

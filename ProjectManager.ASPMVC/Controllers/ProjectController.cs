@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.ASPMVC.Handlers;
 using ProjectManager.ASPMVC.Models.Project;
 using ProjectManager.BLL.Entities;
 using ProjectManager.COMMON.Repositories;
@@ -8,19 +9,23 @@ namespace ProjectManager.ASPMVC.Controllers
 {
     public class ProjectController : Controller
     {
-        private readonly IRepo_Project<Project> _bllService;
+        private readonly IRepo_Project<Project> _bllProjectService;
+        private readonly IRepo_Employee<Employee> _bllEmployeeService;
+        private readonly UserSessionManager _userSession;
 
-        public ProjectController(IRepo_Project<Project> bllService)
+        public ProjectController(IRepo_Project<Project> bllProjectService, IRepo_Employee<Employee> bllEmployeeService, UserSessionManager userSession)
         {
-            _bllService = bllService;
+            _bllProjectService = bllProjectService;
+            _bllEmployeeService = bllEmployeeService;
+            _userSession = userSession;
         }
 
         // GET: ProjectController
         public ActionResult Index()
         {
-
+            Guid employeeId = _bllEmployeeService.Get_ByUserId(_userSession.UserId);
             IEnumerable<ListProject_VM> model;
-            model = _bllService.
+            model = _bllProjectService.Get_ByEmployeeId(employeeId).ToListItem();
             return View();
         }
 
