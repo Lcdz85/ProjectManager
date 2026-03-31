@@ -13,6 +13,7 @@ namespace ProjectManager.BLL.Entities
         public string Password { get; private set; }
         public Guid EmployeeId { get; private set; }
 
+
         public User(Guid userId, string email, string password, Guid employeeId)
         {
             UserId = userId;
@@ -20,12 +21,10 @@ namespace ProjectManager.BLL.Entities
             Password = password;
             EmployeeId = employeeId;
         }
-
-        public User(string email, string password, Guid employeeId)
+        public User(string email, string password)
         {
             Email = email;
             Password = password;
-            EmployeeId = employeeId;
         }
     }
 }

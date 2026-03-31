@@ -48,13 +48,10 @@ namespace ProjectManager.DAL.Services
         {
             using (SqlCommand command = _connection.CreateCommand())
             {
-                command.CommandText = "SP_UserProfile_Update";
+                command.CommandText = "SP_Project_Update";
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue(nameof(projectId), projectId);
-                command.Parameters.AddWithValue(nameof(Project.Name), newData.Name);
                 command.Parameters.AddWithValue(nameof(Project.Description), newData.Description);
-                command.Parameters.AddWithValue(nameof(Project.Creationdate), newData.Creationdate);
-                command.Parameters.AddWithValue(nameof(Project.ProjectManagerId), newData.ProjectManagerId);
                 _connection.Open();
                 command.ExecuteNonQuery();
                 _connection.Close();

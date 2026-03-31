@@ -8,11 +8,11 @@ namespace ProjectManager.BLL.Entities
 {
     public class Project
     {
-        public Guid ProjectId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime Creationdate { get; set; }
-        public Guid ProjectManagerId { get; set; }
+        public Guid ProjectId { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public DateTime Creationdate { get; private set; }
+        public Guid ProjectManagerId { get; private set; }
 
         public Project(Guid projectId, string name, string description, DateTime creationdate, Guid projectManagerId)
         {

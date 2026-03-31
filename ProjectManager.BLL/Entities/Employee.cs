@@ -8,11 +8,11 @@ namespace ProjectManager.BLL.Entities
 {
     public class Employee
     {
-        public Guid EmployeeId { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public DateTime Hiredate { get; set; }
-        public bool IsProjectManager { get; set; }
+        public Guid EmployeeId { get; private set; }
+        public string Firstname { get; private set; }
+        public string Lastname { get; private set; }
+        public DateTime Hiredate { get; private set; }
+        public bool IsProjectManager { get; private set; }
 
         public Employee(Guid employeeId, string firstname, string lastname, DateTime hiredate, bool isProjectManager)
         {
@@ -23,12 +23,11 @@ namespace ProjectManager.BLL.Entities
             IsProjectManager = isProjectManager;
         }
 
-        public Employee(string firstname, string lastname, DateTime hiredate, bool isProjectManager = false)
+        public Employee(string firstname, string lastname, DateTime hiredate)
         {
             Firstname = firstname;
-            Lastname=lastname;
+            Lastname = lastname;
             Hiredate = hiredate;
-            IsProjectManager = isProjectManager;
         }
     }
 }

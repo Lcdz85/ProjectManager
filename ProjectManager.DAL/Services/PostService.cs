@@ -95,9 +95,19 @@ namespace ProjectManager.DAL.Services
             }
         }
 
-        public void Update(Guid postId, Post newData)
+        public void Update(Guid postId, Guid employeeId, Post newData)
         {
-            throw new NotImplementedException();
+            using (SqlCommand command = _connection.CreateCommand())
+            {
+                command.CommandText = "SP_Post_Update";
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue(nameof(postId), postId);
+                command.Parameters.AddWithValue(nameof(employeeId), employeeId);
+                command.Parameters.AddWithValue(nameof(Post.Content), newData.Content);
+                _connection.Open();
+                command.ExecuteNonQuery();
+                _connection.Close();
+            }
         }
     }
 }
