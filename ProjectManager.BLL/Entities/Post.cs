@@ -17,8 +17,10 @@ namespace ProjectManager.BLL.Entities
 
         public Post(string subject, string content, Guid employeeId, Guid projectId)
         {
+            PostId = Guid.NewGuid();
             Subject = subject;
             Content = content;
+            SendDate = DateTime.Now;
             EmployeeId = employeeId;
             ProjectId = projectId;
         }

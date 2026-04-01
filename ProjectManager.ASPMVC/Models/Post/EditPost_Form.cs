@@ -13,6 +13,5 @@ namespace ProjectManager.ASPMVC.Models.Post
 
         [DisplayName("Nouveau contenu : ")]
         public string Content { get; set; }
-
     }
 }

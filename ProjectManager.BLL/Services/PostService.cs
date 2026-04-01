@@ -33,9 +33,9 @@ namespace ProjectManager.BLL.Services
             return _dalService.Get_ByProjectId_WorkOnIt(projectId, employeeId).Select(p => p.ToBLL());
         }
 
-        public void Update(Guid postId, Post newData)
+        public void Update(Guid postId,Guid employeeId, Post newData)
         {
-            _dalService.Update(postId, newData.ToDAL());
+            _dalService.Update(postId, employeeId, newData.ToDAL());
         }
     }
 }

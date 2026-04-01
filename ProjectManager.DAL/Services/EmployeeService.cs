@@ -75,9 +75,9 @@ namespace ProjectManager.DAL.Services
             {
                 List<Employee> result = new List<Employee>();
 
-                command.CommandText = "SP_Employee_Get_FromEmployeeId";
+                command.CommandText = "SP_Employee_Get_FromProjectId";
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue(nameof(projetctId), projetctId);
+                command.Parameters.AddWithValue("@projectId", projetctId);
                 _connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -96,7 +96,7 @@ namespace ProjectManager.DAL.Services
         {
             using (SqlCommand command = _connection.CreateCommand())
             {
-                command.CommandText = "SP_Employee_Get_FromEmployeeId";
+                command.CommandText = "SP_Employee_Get_FromUserId";
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue(nameof(userId), userId);
                 _connection.Open();

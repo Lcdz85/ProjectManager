@@ -11,21 +11,28 @@ namespace ProjectManager.BLL.Services
 {
     public class ProjectService : IRepo_Project<Project>
     {
-        public readonly IRepo_Project<DAL.Entities.Project> _dalService;
+        private readonly IRepo_Project<DAL.Entities.Project> _dalService;
+        private readonly IRepo_Employee<Employee> _employeeService;
 
-        public ProjectService(IRepo_Project<DAL.Entities.Project> dalService)
+
+
+        public ProjectService(IRepo_Project<DAL.Entities.Project> dalService, IRepo_Employee<Employee> employeeService)
         {
             _dalService = dalService;
+            _employeeService = employeeService;
         }
 
         public Guid Create(Project project)
         {
             return _dalService.Create(project.ToDAL());
+
         }
 
         public Project Get(Guid projectId)
         {
-            return _dalService.Get(projectId).ToBLL();
+            IEnumerable<Employee> members = _employeeService.Get_ByProjectId(projectId);
+            int membersCount = members.Count();
+            return _dalService.Get(projectId).ToBLL(members, membersCount);
         }
 
         public IEnumerable<Project> Get_ByEmployeeId(Guid employeeId)

@@ -10,8 +10,5 @@ namespace ProjectManager.ASPMVC.Models.Project
 
         [DisplayName("Description :")]
         public string Description { get; set; }
-
-        [ScaffoldColumn(false)]
-        public Guid ProjectManagerId { get; set; }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.ASPMVC.Handlers;
+using ProjectManager.ASPMVC.Mappers;
 using ProjectManager.ASPMVC.Models.Project;
 using ProjectManager.BLL.Entities;
 using ProjectManager.COMMON.Repositories;
 
 namespace ProjectManager.ASPMVC.Controllers
 {
+    [TypeFilter<RequiredAuthenticationFilter>]
+
     public class ProjectController : Controller
     {
         private readonly IRepo_Project<Project> _bllProjectService;
@@ -23,16 +26,31 @@ namespace ProjectManager.ASPMVC.Controllers
         // GET: ProjectController
         public ActionResult Index()
         {
-            Guid employeeId = _bllEmployeeService.Get_ByUserId(_userSession.UserId);
+            Employee employee = _bllEmployeeService.Get(_userSession.EmployeeId.Value);
             IEnumerable<ListProject_VM> model;
-            model = _bllProjectService.Get_ByEmployeeId(employeeId).ToListItem();
-            return View();
+
+            if (employee.IsProjectManager)
+            {
+                model = _bllProjectService
+                    .Get_ByProjectManagerId(employee.EmployeeId)
+                    .Select(p => p.ToListItem());
+            }
+            else
+            {
+                model = _bllProjectService
+                    .Get_ByEmployeeId(employee.EmployeeId)
+                    .Select(p => p.ToListItem());
+            }
+
+            return View(model);
         }
 
-        // GET: ProjectController/Details/5
-        public ActionResult Details(int id)
+// GET: ProjectController/Details/5
+public ActionResult Details(Guid id)
         {
-            return View();
+            DetailsProject_VM model = _bllProjectService.Get(id).ToDetails();
+
+            return View(model);
         }
 
         // GET: ProjectController/Create
@@ -44,11 +62,15 @@ namespace ProjectManager.ASPMVC.Controllers
         // POST: ProjectController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CreateProject_Form form)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid) throw new InvalidOperationException("Le formulaire n'est pas valide.");
+                Project newProject = form.ToBLL();
+                newProject.ProjectManagerId = _userSession.EmployeeId.Value;
+                Guid projectId = _bllProjectService.Create(newProject);
+                return RedirectToAction(nameof(Index), "Project", new { id = projectId });
             }
             catch
             {
@@ -57,19 +79,22 @@ namespace ProjectManager.ASPMVC.Controllers
         }
 
         // GET: ProjectController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
+            EditProject_Form model = _bllProjectService.Get(id).ToEdit();
             return View();
         }
 
         // POST: ProjectController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Guid id, EditProject_Form form)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid) throw new InvalidOperationException("Le formulaire n'est pas valide");
+                _bllProjectService.Update(id, form.ToBLL());
+                return RedirectToAction(nameof(Details), "Project", new { id });
             }
             catch
             {

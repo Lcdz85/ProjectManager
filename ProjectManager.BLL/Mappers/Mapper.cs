@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using ProjectManager.BLL.Entities;
+using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.BLL.Mappers
 {
@@ -69,13 +72,23 @@ namespace ProjectManager.BLL.Mappers
             );
             return project;
         }
+
+        public static BLL.Entities.Project ToBLL(this DAL.Entities.Project entity, IEnumerable<Entities.Employee> members, int membersCount)
+        {
+            BLL.Entities.Project project = entity.ToBLL();
+            project.Members = members;
+            project.MembersCount = membersCount;
+            return project;
+        }
         public static DAL.Entities.Project ToDAL(this BLL.Entities.Project entity)
         {
             if (entity is null) throw new ArgumentNullException(nameof(entity));
             return new DAL.Entities.Project()
             {
+                ProjectId = entity.ProjectId,
                 Name = entity.Name,
                 Description = entity.Description,
+                Creationdate = entity.Creationdate,
                 ProjectManagerId = entity.ProjectManagerId
             };
         }
@@ -100,8 +113,10 @@ namespace ProjectManager.BLL.Mappers
             if (entity is null) throw new ArgumentNullException(nameof(entity));
             return new DAL.Entities.Post()
             {
+                PostId = entity.PostId,
                 Subject = entity.Subject,
                 Content = entity.Content,
+                SendDate = entity.SendDate,
                 EmployeeId = entity.EmployeeId,
                 ProjectId = entity.ProjectId
             };

@@ -1,9 +1,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.ASPMVC.Handlers;
 using ProjectManager.ASPMVC.Models;
 
 namespace ProjectManager.ASPMVC.Controllers
 {
+    [TypeFilter<RequiredAuthenticationFilter>]
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

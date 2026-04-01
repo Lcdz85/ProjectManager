@@ -9,5 +9,6 @@ namespace ProjectManager.ASPMVC.Models.Project
         public string Name { get; set; }
         public string Description { get; set; }
         public int MembersCount { get; set; }
+
     }
 }

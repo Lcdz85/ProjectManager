@@ -1,0 +1,80 @@
+﻿@using ProjectManager.BLL.Entities
+@using ProjectManager.COMMON.Repositories
+@using ProjectManager.ASPMVC.Handlers
+
+@inject IRepo_Employee<Employee> employeeService
+@inject IRepo_Project<Project> projectService
+@inject IRepo_Post<Post> postService
+@inject UserSessionManager userSession
+
+@model ProjectManager.ASPMVC.Models.Project.DetailsProject_VM
+
+@{
+    ViewData["Title"] = "Details";
+
+    Employee? connectedUser = null;
+    Project currentProjet = projectService.Get(Model.ProjectId);
+    Guid managerId = currentProjet.ProjectManagerId;
+    Employee chef = employeeService.Get(managerId);
+    IEnumerable<Employee> members = employeeService.Get_ByProjectId(currentProjet.ProjectId);
+    int membresCount = members.Count() + 1;
+
+    if (userSession != null)
+    {
+        connectedUser = employeeService.Get(userSession.EmployeeId.Value);
+    }
+}
+
+<h1>Details</h1>
+
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            <h3>@Html.DisplayFor(model => model.Name)</h3>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Creationdate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Creationdate.ToString("dd-MM-yyyy")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+@if (connectedUser.IsProjectManager)
+{
+    <div>
+        @Html.ActionLink("Modifier la description", "Edit", new { id = ViewContext.RouteData.Values["id"] })
+    </div>
+}
+</hr>
+<div>
+    <h5>Equipe du projet</h5>
+    </hr>
+    <ul>
+        @if(connectedUser.IsProjectManager == true)
+        {
+            <li>Vous (Chef de projet) </li>
+        }
+        else
+        {
+            string nomChef = chef.Firstname + " " + chef.Lastname;
+
+            <li>@nomChef (Chef de projet) </li>
+        }
+        @foreach(Employee m in members)
+        {
+            string nomMember = m.Firstname + " " + m.Lastname;
+
+            <li>@nomMember</li>
+        }
+    </ul>
+</div>

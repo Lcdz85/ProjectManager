@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using ProjectManager.BLL.Entities
+@using ProjectManager.COMMON.Repositories
+@using ProjectManager.ASPMVC.Handlers
+
+@inject IRepo_Employee<Employee> employeeService
+@inject UserSessionManager userSession
+
+@{
+    Employee? connectedUser = null;
+
+    if (userSession != null && userSession.EmployeeId.HasValue)
+    {
+        connectedUser = employeeService.Get(userSession.EmployeeId.Value);
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,20 +26,29 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ProjectManager.ASPMVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <h2 class="mb-0">
+                    Bienvenue
+                    @if (connectedUser != null)
+                    {
+                        <span>@connectedUser.Firstname @connectedUser.Lastname</span>
+                    }
+                </h2>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav flex-row align-items-center gap-2">
+                        @if (connectedUser != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">Projets</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Post" asp-action="Index">Posts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-danger" asp-area="" asp-controller="Auth" asp-action="Logout">Se déconnecter</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

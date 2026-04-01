@@ -35,8 +35,8 @@ namespace ProjectManager.ASPMVC.Controllers
             try
             {
                 if (!ModelState.IsValid) throw new InvalidOperationException("Le formulaire n'est pas valide");
-                Guid userId = _bllService.CheckPassword(form.Email, form.Password);
-                _userSession.UserId = userId;
+                Guid employeeId = _bllService.CheckPassword(form.Email, form.Password);
+                _userSession.EmployeeId = employeeId;
                 return RedirectToAction("Index", "Project");
             }
             catch
@@ -45,12 +45,14 @@ namespace ProjectManager.ASPMVC.Controllers
             }
         }
 
+        [TypeFilter<RequiredAuthenticationFilter>]
         [HttpGet]
         public IActionResult Logout()
         {
             return View();
         }
 
+        [TypeFilter<RequiredAuthenticationFilter>]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Logout(IFormCollection collection)
@@ -58,7 +60,7 @@ namespace ProjectManager.ASPMVC.Controllers
             try
             {
                 if (!ModelState.IsValid) throw new InvalidOperationException();
-                _userSession.UserId = null;
+                _userSession.EmployeeId = null;
                 return RedirectToAction(nameof(Login));
             }
             catch (Exception)

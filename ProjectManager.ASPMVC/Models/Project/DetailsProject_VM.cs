@@ -9,5 +9,6 @@ namespace ProjectManager.ASPMVC.Models.Project
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Creationdate { get; set;}
+        public IEnumerable<string> Members { get; set; }
     }
 }
